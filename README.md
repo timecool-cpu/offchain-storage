@@ -1,1 +1,0 @@
-# timecool-cpu.github.io
