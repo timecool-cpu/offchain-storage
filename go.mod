@@ -7,8 +7,9 @@ require (
 	github.com/ipfs/boxo v0.10.2-0.20230629143123-2d3edc552442
 	github.com/ipfs/go-cid v0.4.1
 	github.com/ipfs/go-ipfs-api v0.6.0
+	github.com/ipfs/go-ipfs-files v0.3.0
 	github.com/ipfs/interface-go-ipfs-core v0.11.2
-	github.com/ipfs/kubo v0.21.0
+	github.com/ipfs/kubo v0.21.0 // v0.18.0支持database
 	github.com/libp2p/go-libp2p v0.28.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mrusme/superhighway84 v0.2.4

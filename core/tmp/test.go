@@ -2,6 +2,7 @@ package main
 
 //
 //
+//
 //// dirty example to use go-orbitdb eventlog
 //
 //import (

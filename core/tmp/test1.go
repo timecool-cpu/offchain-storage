@@ -84,7 +84,27 @@ func createTempRepo() (string, error) {
 
 /// ------ 生成节点
 
-// 创建一个IPFS节点并返回其coreAPI
+//// 创建一个IPFS节点并返回其coreAPI
+//func createNode(ctx context.Context, repoPath string) (*core.IpfsNode, error) {
+//	// Open the repo
+//	repo, err := fsrepo.Open(repoPath)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	// Construct the node
+//
+//	nodeOptions := &core.BuildCfg{
+//		Online:  true,
+//		Routing: libp2p.DHTOption, // 这个选项将节点设置为完全的DHT节点（既可以获取也可以存储DHT记录）
+//		// Routing: libp2p.DHTClientOption, // This option sets the node to be a client DHT node (only fetching records)
+//		Repo: repo,
+//	}
+//
+//	return core.NewNode(ctx, nodeOptions)
+//}
+
+// Creates an IPFS node and returns its coreAPI
 func createNode(ctx context.Context, repoPath string) (*core.IpfsNode, error) {
 	// Open the repo
 	repo, err := fsrepo.Open(repoPath)
@@ -96,9 +116,12 @@ func createNode(ctx context.Context, repoPath string) (*core.IpfsNode, error) {
 
 	nodeOptions := &core.BuildCfg{
 		Online:  true,
-		Routing: libp2p.DHTOption, // 这个选项将节点设置为完全的DHT节点（既可以获取也可以存储DHT记录）
+		Routing: libp2p.DHTOption, // This option sets the node to be a full DHT node (both fetching and storing DHT Records)
 		// Routing: libp2p.DHTClientOption, // This option sets the node to be a client DHT node (only fetching records)
 		Repo: repo,
+		ExtraOpts: map[string]bool{
+			"pubsub": true,
+		},
 	}
 
 	return core.NewNode(ctx, nodeOptions)
