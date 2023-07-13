@@ -1,7 +1,7 @@
 package math
 
 import (
-	"github.com/timecool-cpu/offChainStorage/core/curve"
+	"github.com/timecool-cpu/offchain-storage/core/curve"
 	"math/big"
 )
 

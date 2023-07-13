@@ -1,4 +1,4 @@
-module github.com/timecool-cpu/offChainStorage
+module github.com/timecool-cpu/offchain-storage
 
 go 1.19
 

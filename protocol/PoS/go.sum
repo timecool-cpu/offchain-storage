@@ -1,0 +1,6 @@
+github.com/kwonalbert/spacemint v0.0.0-20160329224229-4a63bded3e13 h1:MOfmI5dgNjeRk3yA1fG/uRJSzG0xVNu8wUd6dV8H5bA=
+github.com/kwonalbert/spacemint v0.0.0-20160329224229-4a63bded3e13/go.mod h1:7gaTxUJSJdpiX+THtp5IrLSztinZdwKHg+eShuqG5SE=
+golang.org/x/crypto v0.11.0 h1:6Ewdq3tDic1mg5xRO4milcWCfMVQhI4NkqWWvqejpuA=
+golang.org/x/crypto v0.11.0/go.mod h1:xgJhtzW8F9jGdVFWZESrid1U1bjeNy4zgy5cRr/CIio=
+golang.org/x/sys v0.10.0 h1:SqMFp9UcQJZa+pmYuAKjd9xq1f0j5rLcDIk0mj4qAsA=
+golang.org/x/sys v0.10.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

@@ -7,9 +7,9 @@ import (
 	"encoding/gob"
 	"encoding/hex"
 	"fmt"
-	"github.com/timecool-cpu/offChainStorage/core/curve"
-	"github.com/timecool-cpu/offChainStorage/core/math"
-	"github.com/timecool-cpu/offChainStorage/core/utils"
+	"github.com/timecool-cpu/offchain-storage/core/curve"
+	"github.com/timecool-cpu/offchain-storage/core/math"
+	"github.com/timecool-cpu/offchain-storage/core/utils"
 	"math/big"
 )
 

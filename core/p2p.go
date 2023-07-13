@@ -47,7 +47,7 @@ package core
 //		panic(err)
 //	}
 //
-//	// Set a function as the stream handler.
+//	// Set a protocol as the stream handler.
 //	host.SetStreamHandler("/p2p/1.0.0", handleStream)
 //
 //	fmt.Println("Host created. We are:", host.ID())

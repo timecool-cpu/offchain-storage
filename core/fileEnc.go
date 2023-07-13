@@ -3,8 +3,8 @@ package core
 import (
 	"crypto/ecdsa"
 	"fmt"
-	"github.com/timecool-cpu/offChainStorage/core/curve"
-	"github.com/timecool-cpu/offChainStorage/core/recrypt"
+	"github.com/timecool-cpu/offchain-storage/core/curve"
+	"github.com/timecool-cpu/offchain-storage/core/recrypt"
 	"math/big"
 	"path/filepath"
 )
