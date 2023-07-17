@@ -7,7 +7,6 @@ require (
 	github.com/ipfs/boxo v0.10.2-0.20230629143123-2d3edc552442
 	github.com/ipfs/go-cid v0.4.1
 	github.com/ipfs/go-ipfs-api v0.6.0
-	github.com/ipfs/go-ipfs-files v0.3.0
 	github.com/ipfs/interface-go-ipfs-core v0.11.2
 	github.com/ipfs/kubo v0.21.0 // v0.18.0支持database
 	github.com/libp2p/go-libp2p v0.28.1
@@ -17,6 +16,8 @@ require (
 	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.11.0
 )
+
+require github.com/libp2p/go-libp2p-core v0.20.1
 
 require (
 	bazil.org/fuse v0.0.0-20200117225306-7b5117fecadc // indirect

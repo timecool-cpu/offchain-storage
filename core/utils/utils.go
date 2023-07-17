@@ -5,7 +5,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"encoding/hex"
-	"github.com/timecool-cpu/offChainStorage/core/curve"
+	"github.com/timecool-cpu/offchain-storage/core/curve"
 	"golang.org/x/crypto/sha3"
 	"math/big"
 )
