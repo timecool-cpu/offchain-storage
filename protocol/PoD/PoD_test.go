@@ -20,40 +20,43 @@ import (
 )
 
 func TestSol(T *testing.T) {
-	// 生成一个新的私钥
+	//随机生成一个新的私钥
 	//privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	privateKey, err := crypto.HexToECDSA("af96c14f7494e2c452691207287791ba45849c8bd3baa84efb6ed91d823995da")
+	privateKey, err := crypto.HexToECDSA("bff8accfb54bc3f48ac43bb072d093f13cfdc1bca9c06ce8f785f8913f4bf9d6")
 	if err != nil {
 		log.Fatalf("Failed to generate private key: %v", err)
 	}
 
-	// 要签名的消息
-	message := "Hello, world!"
-
-	// 计算消息的 Keccak-256 哈希
-	hash := crypto.Keccak256Hash([]byte(message))
-
-	// 签名哈希
-	signature, err := crypto.Sign(hash.Bytes(), privateKey)
-	if err != nil {
-		log.Fatalf("Failed to sign hash: %v", err)
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
 	}
 
-	// 签名是一个65字节的数组，其中前32字节是r，接下来的32字节是s，最后一个字节是v
+	address := crypto.PubkeyToAddress(*publicKeyECDSA)
+	fmt.Println(address.Hex()) // 输出地址
+
+	msg := []byte("hello, world")
+	hash := crypto.Keccak256Hash(msg)
+
+	signature, err := crypto.Sign(hash.Bytes(), privateKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	r := new(big.Int).SetBytes(signature[:32])
 	s := new(big.Int).SetBytes(signature[32:64])
 	v := signature[64]
-
-	// 如果v是0或1，需要加上27，以符合以太坊的签名标准
 	if v < 27 {
-		v += 27
+		v += 27 // 在以太坊中，v的值应该是27或28
 	}
 
-	fmt.Printf("Message: %s\n", message)
-	fmt.Printf("Hash: %s\n", hash.Hex())
+	fmt.Printf("Message: %s\n", msg)
+	fmt.Printf("Hash: %x\n", hash.Bytes())
 	fmt.Printf("Signature: %x\n", signature)
 	fmt.Printf("R: %x\n", r)
 	fmt.Printf("S: %x\n", s)
+	fmt.Printf("V: %d\n", v)
 
 	// Set up client
 	client, err := ethclient.Dial("http://localhost:8545")
@@ -61,22 +64,10 @@ func TestSol(T *testing.T) {
 		log.Fatal(err)
 	}
 
-	// Set up sender address
-	privateKey, err = crypto.HexToECDSA("af96c14f7494e2c452691207287791ba45849c8bd3baa84efb6ed91d823995da")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	publicKey := privateKey.Public()
-	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
-	if !ok {
-		log.Fatal("error casting public key to ECDSA")
-	}
-
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
 
 	// Set up contract instance
-	contractAddress := common.HexToAddress("0x8C6E3b3Cb647831cB136BCCDb775B0D14D7B8Eaa") //部署的地址
+	contractAddress := common.HexToAddress("0x8d22e5c5F9c27b71C362923EB1c6cdADD4C67A4c") //部署的地址
 	instance, err := NewPoD(contractAddress, client)                                     // 修改这里，使用你刚生成的包的函数
 	if err != nil {
 		log.Fatal(err)
@@ -130,114 +121,18 @@ func TestSol(T *testing.T) {
 	log.Printf("sArray:0x %x\n", sArray)
 	log.Printf("hash:0x %x\n", hash.Bytes())
 
-	// Call the Verify function
-	//isValid, err := instance.VerifySignature(&bind.CallOpts{}, identifier, hash, v, rArray, sArray)
-	//if err != nil {
-	//	log.Fatalf("Failed to call Verify: %v", err)
-	//}
-	//fmt.Printf("Verification result: %v\n", isValid)
+	//Call the Verify function
+	isValid, err := instance.VerifySignature(&bind.CallOpts{}, identifier, hash, v, rArray, sArray)
+	if err != nil {
+		log.Fatalf("Failed to call Verify: %v", err)
+	}
+	fmt.Printf("Verification result: %v\n", isValid)
 	addr, err := instance.GetAddr(&bind.CallOpts{}, identifier, hash, v, rArray, sArray)
 	if err != nil {
 		return
 	}
 	fmt.Printf("addr: %x\n", addr)
 }
-
-//func TestSol(T *testing.T) {
-//	// 生成一个新的私钥
-//	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-//	if err != nil {
-//		log.Fatalf("Failed to generate private key: %v", err)
-//	}
-//
-//	// 要签名的消息
-//	message := "Hello, world!"
-//
-//	// 计算消息的 Keccak-256 哈希
-//	hash := crypto.Keccak256Hash([]byte(message))
-//
-//	// 签名哈希
-//	signature, err := crypto.Sign(hash.Bytes(), privateKey)
-//	if err != nil {
-//		log.Fatalf("Failed to sign hash: %v", err)
-//	}
-//
-//	// 签名是一个65字节的数组，其中前32字节是r，接下来的32字节是s，最后一个字节是v
-//	r := new(big.Int).SetBytes(signature[:32])
-//	s := new(big.Int).SetBytes(signature[32:64])
-//	v := signature[64]
-//
-//	// 如果v是0或1，需要加上27，以符合以太坊的签名标准
-//	if v < 27 {
-//		v += 27
-//	}
-//
-//	fmt.Printf("Message: %s\n", message)
-//	fmt.Printf("Hash: %s\n", hash.Hex())
-//	fmt.Printf("Signature: %x\n", signature)
-//	fmt.Printf("R: %x\n", r)
-//	fmt.Printf("S: %x\n", s)
-//
-//	// Set up client
-//	client, err := ethclient.Dial("http://localhost:8545")
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	// Set up sender address
-//	privateKey, err = crypto.HexToECDSA("af96c14f7494e2c452691207287791ba45849c8bd3baa84efb6ed91d823995da")
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	publicKey := privateKey.Public()
-//	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
-//	if !ok {
-//		log.Fatal("error casting public key to ECDSA")
-//	}
-//
-//	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
-//
-//	// Set up contract instance
-//	contractAddress := common.HexToAddress("0x0B0Fc8cD1a5ab9993246d187cd8eA23CB596D100") //部署的地址
-//	instance, err := NewPoD(contractAddress, client)                                     // 修改这里，使用你刚生成的包的函数
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	// Set up auth
-//	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	gasPrice, err := client.SuggestGasPrice(context.Background())
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	auth := bind.NewKeyedTransactor(privateKey)
-//	auth.Nonce = big.NewInt(int64(nonce))
-//	auth.Value = big.NewInt(0)     // in wei
-//	auth.GasLimit = uint64(300000) // in units
-//	auth.GasPrice = gasPrice
-//
-//	rBytes := r.Bytes()
-//	sBytes := s.Bytes()
-//
-//	var rArray [32]byte
-//	var sArray [32]byte
-//
-//	copy(rArray[:], rBytes[len(rBytes)-32:])
-//	copy(sArray[:], sBytes[len(sBytes)-32:])
-//
-//	address, err := instance.VerifySignature(&bind.CallOpts{}, hash, uint8(v), rArray, sArray)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	fmt.Println("Recovered address:", address.Hex())
-//
-//}
 
 func TestProofOfDelivery_tmpfile(t *testing.T) {
 	// 创建临时文件
