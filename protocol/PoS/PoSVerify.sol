@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+import "./node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+
 
 contract Verifier {
     bytes public pk;   // public key to verify the proof
@@ -55,6 +57,10 @@ contract Verifier {
         size = size;
         pow2 = pow2;
         log2 = log2;
+    }
+
+    function TestHash(bytes memory val) public returns (bytes32) {
+        return MessageHashUtils.hash(val);
     }
 
     function verifySpace(
