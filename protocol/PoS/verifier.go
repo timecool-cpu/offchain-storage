@@ -49,59 +49,6 @@ func NewVerifier(pk []byte, index int64, beta int, root []byte) *Verifier {
 	}
 	return &v
 }
-
-// SelectChallenges TODO: need to select based on some pseudorandomness/gamma function?
-//
-//	Note that these challenges are different from those of cryptocurrency
-func (v *Verifier) SelectChallenges(seed []byte) []int64 {
-	challenges := make([]int64, v.beta*int(v.log2))
-	rands := make([]byte, v.beta*int(v.log2)*8)
-	sha3.ShakeSum256(rands, seed) //PRNG
-	for i := range challenges {
-		val, num := binary.Uvarint(rands[i*8 : (i+1)*8])
-		if num < 0 {
-			panic("Couldn't read PRNG")
-		}
-		challenges[i] = int64(val % uint64(v.size))
-	}
-	return challenges
-}
-
-/*
-*
-Verifier contract in Solidity
-pragma solidity >=0.4.22 <0.9.0;
-
-	contract Verifier {
-	    uint256 constant hashSize = 32; // Assuming SHA-256
-	    uint256 pow2;
-	    bytes pk;
-
-	    function VerifySpace(int64[] memory challenges, bytes32[][] memory hashes, bytes32[][][] memory parents, bytes32[][][] memory proofs, bytes32[][][][] memory pProofs) public view returns (bool) {
-	        for (uint i = 0; i < challenges.length; i++) {
-	            bytes memory val = abi.encodePacked(pk, challenges[i] + pow2);
-	            for (uint j = 0; j < parents[i].length; j++) {
-	                val = abi.encodePacked(val, parents[i][j]);
-	            }
-	            bytes32 exp = keccak256(val);
-	            if (exp != hashes[i][0]) {
-	                return false;
-	            }
-	            if (!Verify(challenges[i], hashes[i], proofs[i])) {
-	                return false;
-	            }
-
-	            int64[] memory ps = GetParents(challenges[i], index);
-	            for (uint j = 0; j < ps.length; j++) {
-	                if (!Verify(ps[j], parents[i][j], pProofs[i][j])) {
-	                    return false;
-	                }
-	            }
-	        }
-	        return true;
-	    }
-	}
-*/
 func (v *Verifier) VerifySpace(challenges []int64, hashes [][]byte, parents [][][]byte, proofs [][][]byte, pProofs [][][][]byte) bool {
 	for i := range challenges {
 		buf := make([]byte, hashSize)
@@ -151,4 +98,21 @@ func (v *Verifier) Verify(node int64, hash []byte, proof [][]byte) bool {
 	}
 
 	return len(v.root) == len(curHash)
+}
+
+// SelectChallenges TODO: need to select based on some pseudorandomness/gamma function?
+//
+//	Note that these challenges are different from those of cryptocurrency
+func (v *Verifier) SelectChallenges(seed []byte) []int64 {
+	challenges := make([]int64, v.beta*int(v.log2))
+	rands := make([]byte, v.beta*int(v.log2)*8)
+	sha3.ShakeSum256(rands, seed) //PRNG
+	for i := range challenges {
+		val, num := binary.Uvarint(rands[i*8 : (i+1)*8])
+		if num < 0 {
+			panic("Couldn't read PRNG")
+		}
+		challenges[i] = int64(val % uint64(v.size))
+	}
+	return challenges
 }
