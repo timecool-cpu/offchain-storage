@@ -1,6 +1,7 @@
 package PoS
 
 import (
+	"crypto/sha256"
 	"flag"
 	"fmt"
 	"log"
@@ -69,10 +70,11 @@ func TestMain(m *testing.M) {
 
 	root := commit.Commit
 	verifier = NewVerifier(pk, index, beta, root)
-
-	os.Exit(m.Run())
+	code := m.Run()
+	os.Exit(code)
 }
 
 func TestHash(t *testing.T) {
-
+	sum256 := sha256.Sum256([]byte("hello"))
+	fmt.Println(sum256)
 }

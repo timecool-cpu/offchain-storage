@@ -1,9 +1,9 @@
 package PoS
 
 import (
+	"crypto/sha256"
 	//"fmt"
 	"github.com/kwonalbert/spacemint/util"
-	"golang.org/x/crypto/sha3"
 )
 
 type Prover struct {
@@ -142,7 +142,7 @@ func (p *Prover) generateMerkle() []byte {
 			hash1 := hashStack[len(hashStack)-1]
 			hashStack = hashStack[:len(hashStack)-1]
 			val := append(hash1[:], hash2[:]...)
-			hash := sha3.Sum256(val)
+			hash := sha256.Sum256(val)
 
 			hashStack = append(hashStack, hash[:])
 

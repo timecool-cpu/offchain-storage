@@ -23,7 +23,7 @@ tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 contract_address = tx_receipt['contractAddress']
 print(contract_address)
 
-# 将部署的合约地址设置到合约实例上
+ # 将部署的合约地址设置到合约实例上
 YourContract = YourContract(address=contract_address)
 
 # 我们需要一些二进制数据，所以这里用到了 Web3 的 solidityKeccak 函数生成一些模拟数据

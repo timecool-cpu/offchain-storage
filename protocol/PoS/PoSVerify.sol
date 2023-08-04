@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "./node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
+interface IDataMarketplace {
+    function registerStorageProvider(address addr, uint256 availableSpace, uint256 pricePerGBPerMonth) external;
+}
 
 contract Verifier {
     bytes public pk;   // public key to verify the proof
     uint256 public beta; // number of challenges needed
     bytes32 public root; // root hash
+    IDataMarketplace public market;
+    uint256 public availableSpace;
+    uint256 public pricePerGBPerMonth;
 
     struct Graph {
         bytes pk;
@@ -28,8 +33,10 @@ contract Verifier {
     event Log_bytes(string message, bytes value);
     event Log_bytess(string message, bytes[] value);
 
-    constructor(bytes memory _pk, uint256 _index, uint256 _beta, bytes32 _root) public {
-        emit Log_uint256("Function started", 0);
+    constructor(bytes memory _pk, uint256 _index, uint256 _beta, bytes32 _root, uint256 _availableSpace, uint256 _pricePerGBPerMonth) public {
+        availableSpace = _availableSpace;
+        pricePerGBPerMonth = _pricePerGBPerMonth;
+        // emit Log_uint256("Function started", 0);
         pk = _pk;
         beta = _beta;
         root = _root;
@@ -54,13 +61,11 @@ contract Verifier {
         graph = newGraph;
 
         index = _index;
-        size = size;
-        pow2 = pow2;
-        log2 = log2;
     }
 
-    function TestHash(bytes memory val) public returns (bytes32) {
-        return MessageHashUtils.hash(val);
+
+    function setAddress(address add) external {
+        market = IDataMarketplace(add);
     }
 
     function verifySpace(
@@ -80,29 +85,29 @@ contract Verifier {
             for (uint256 j = 0; j < parents[i].length; j++) {
                 val = abi.encodePacked(val, parents[i][j]);
             }
-            if(i == 0) emit Log_bytes("print val", val); //
-            bytes32 exp = keccak256(val);
-            exp = 0x2DAE5D9FDC8E84A59FC994D3EE2DAE5973555F3AACFA4CA3393703A1060FB0A0;
-            if(i == 0) emit Log_bytes32("print exp", exp); //打印exp
-            for (uint256 j = 0; j < 32; j++) {
-                if (exp[j] != hashes[i][j]) {
-                    return false;
-                }
-            }
-
-            // if (!verify(challenges[i], hashes[i], proofs[i],flag)) {
-            //     if(flag) flag = false;
-            //     return false;
+            // if(i == 0) emit Log_bytes("print val", val); //
+            // bytes32 exp = keccak256(val);
+            // if(i == 0) emit Log_bytes32("print exp", exp); //打印exp
+            // for (uint256 j = 0; j < 32; j++) {
+            //     if (exp[j] != hashes[i][j]) {
+            //         return false;
+            //     }
             // }
 
+            if (!verify(challenges[i], hashes[i], proofs[i],flag)) {
+                if(flag) flag = false;
+                return false;
+            }
+
             uint256[] memory ps = getParents(challenges[i], index);
-            emit Log_uint256s("print ps",ps);
+            // emit Log_uint256s("print ps",ps);
             for (uint256 j = 0; j < ps.length; j++) {
                 if (!verify(ps[j], parents[i][j], pProofs[i][j],flag)) {
                     return false;
                 }
             }
         }
+        market.registerStorageProvider(msg.sender, availableSpace,pricePerGBPerMonth);
         return true;
     }
 
@@ -110,12 +115,12 @@ contract Verifier {
         uint256 node,
         bytes memory hash,
         bytes[] memory proof,bool flag
-    ) public returns(bool) {
-        if(flag) {
-            emit Log_uint256("node:",node);
-            emit Log_bytes("hash", hash);
-            emit Log_bytess("proof", proof);
-        }
+    ) public view returns(bool) {
+        // if(flag) {
+        //     emit Log_uint256("node:",node);
+        //     emit Log_bytes("hash", hash);
+        //     emit Log_bytess("proof", proof);
+        // }
         bytes memory curHash = hash;
         uint256 counter = 0;
         for (uint256 i = node + pow2; i > 1; i /= 2) {
@@ -125,33 +130,35 @@ contract Verifier {
             } else {
                 val = abi.encodePacked(proof[counter], curHash);
             }
-            emit Log_bytes("val", val);
-            bytes32 hash = keccak256(val);
-            hash = 0x1fdc8fc77e2796e9e5c7acb80274468aad802804da79e1f020c6cb2328fed406;
+            // emit Log_bytes("val", val);
+            bytes32 hash = sha256(val);
             curHash = abi.encodePacked(hash);
-            emit Log_bytes("curHash",curHash);
+            // emit Log_bytes("curHash",curHash);
             counter++;
         }
         for (uint256 i = 0; i < 32; i++) {
+            // emit Log_bytes32("root",root);
+            // emit Log_bytes("curHash",curHash);
             if (root[i] != curHash[i]) {
                 return false;
             }
         }
+        // emit Log_uint256("Yes!!!",1);
         return root.length == curHash.length;
     }
 
 
     // Determine parent nodes
-    function getParents(uint256 node, uint256 index) public returns(uint256[] memory){
-        emit Log_uint256("print node",node);
-        emit Log_uint256("print index",index);
+    function getParents(uint256 node, uint256 index) public view returns(uint256[] memory){
+        // emit Log_uint256("print node",node);
+        // emit Log_uint256("print index",index);
         if(node < 2**index) {
             return new uint256[](0);
         }
 
         (uint256 offset0, uint256 offset1) = getGraph(node, index);
-        emit Log_uint256("print offset0",offset0);
-        emit Log_uint256("print offset1",offset1);
+        // emit Log_uint256("print offset0",offset0);
+        // emit Log_uint256("print offset1",offset1);
 
         uint256[] memory tempRes = new uint256[](2); // 创建一个临时数组用于存储结果
         uint256 count = 0;
@@ -169,7 +176,7 @@ contract Verifier {
         for(uint256 i = 0; i < count; i++) {
             res[i] = tempRes[i];
         }
-        emit Log_uint256s("print res",res);
+        // emit Log_uint256s("print res",res);
         return res;
     }
 

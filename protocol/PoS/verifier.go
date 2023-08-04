@@ -1,9 +1,8 @@
 package PoS
 
 import (
+	"crypto/sha256"
 	"encoding/binary"
-	"fmt"
-
 	//"fmt"
 	"github.com/kwonalbert/spacemint/util"
 	"golang.org/x/crypto/sha3"
@@ -59,13 +58,12 @@ func (v *Verifier) VerifySpace(challenges []int64, hashes [][]byte, parents [][]
 		for _, ph := range parents[i] {
 			val = append(val, ph...)
 		}
-		exp := sha3.Sum256(val)
-		fmt.Println("exp: ", exp)
-		for j := range exp {
-			if exp[j] != hashes[i][j] {
-				return false
-			}
-		}
+		//exp := sha3.Sum256(val)
+		//for j := range exp {
+		//	if exp[j] != hashes[i][j] {
+		//		return false
+		//	}
+		//}
 		if !v.Verify(challenges[i], hashes[i], proofs[i]) {
 			return false
 		}
@@ -90,8 +88,8 @@ func (v *Verifier) Verify(node int64, hash []byte, proof [][]byte) bool {
 		} else {
 			val = append(proof[counter], curHash...)
 		}
-		hash := sha3.Sum256(val)
-		fmt.Println("hash", hash)
+		hash := sha256.Sum256(val)
+		//fmt.Println("hash", hash)
 		curHash = hash[:]
 		counter++
 	}

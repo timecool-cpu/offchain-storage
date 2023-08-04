@@ -1,10 +1,10 @@
 package PoS
 
 import (
+	"crypto/sha256"
 	"encoding/binary"
 	//"fmt"
 	"github.com/kwonalbert/spacemint/util"
-	"golang.org/x/crypto/sha3"
 	"os"
 	//"runtime/pprof"
 )
@@ -276,7 +276,7 @@ func (g *Graph) ButterflyGraph(index int64, count *int64) {
 			binary.PutVarint(buf, *count)
 			val := append(g.pk, buf...)
 			val = append(val, ph...)
-			hash := sha3.Sum256(val)
+			hash := sha256.Sum256(val)
 
 			g.NewNode(*count, hash[:])
 			*count++
@@ -298,7 +298,7 @@ func (g *Graph) XiGraphIter(index int64) {
 		buf := make([]byte, hashSize)
 		binary.PutVarint(buf, count)
 		val := append(g.pk, buf...)
-		hash := sha3.Sum256(val)
+		hash := sha256.Sum256(val)
 
 		g.NewNode(count, hash[:])
 		count++
@@ -332,7 +332,7 @@ func (g *Graph) XiGraphIter(index int64) {
 				binary.PutVarint(buf, count)
 				val := append(g.pk, buf...)
 				val = append(val, ph...)
-				hash := sha3.Sum256(val)
+				hash := sha256.Sum256(val)
 
 				g.NewNode(count, hash[:])
 				count++
@@ -349,7 +349,7 @@ func (g *Graph) XiGraphIter(index int64) {
 				binary.PutVarint(buf, nodeId)
 				val := append(g.pk, buf...)
 				val = append(val, parent.H...)
-				hash := sha3.Sum256(val)
+				hash := sha256.Sum256(val)
 
 				g.NewNode(nodeId, hash[:])
 				count++
@@ -365,7 +365,7 @@ func (g *Graph) XiGraphIter(index int64) {
 				binary.PutVarint(buf, nodeId)
 				val := append(g.pk, buf...)
 				val = append(val, parent.H...)
-				hash := sha3.Sum256(val)
+				hash := sha256.Sum256(val)
 
 				g.NewNode(nodeId, hash[:])
 				count++
@@ -381,7 +381,7 @@ func (g *Graph) XiGraphIter(index int64) {
 				binary.PutVarint(buf, nodeId)
 				val := append(g.pk, buf...)
 				val = append(val, parent.H...)
-				hash := sha3.Sum256(val)
+				hash := sha256.Sum256(val)
 
 				g.NewNode(nodeId, hash[:])
 				count++
@@ -401,13 +401,13 @@ func (g *Graph) XiGraphIter(index int64) {
 				binary.PutVarint(buf, nodeId0)
 				val := append(g.pk, buf...)
 				val = append(val, ph...)
-				hash1 := sha3.Sum256(val)
+				hash1 := sha256.Sum256(val)
 
 				ph = append(parent0.H, parent1_1.H...)
 				binary.PutVarint(buf, nodeId1)
 				val = append(g.pk, buf...)
 				val = append(val, ph...)
-				hash2 := sha3.Sum256(val)
+				hash2 := sha256.Sum256(val)
 
 				g.NewNode(nodeId0, hash1[:])
 				g.NewNode(nodeId1, hash2[:])
@@ -440,7 +440,7 @@ func (g *Graph) XiGraph(index int64, count *int64) {
 			buf := make([]byte, hashSize)
 			binary.PutVarint(buf, *count)
 			val := append(g.pk, buf...)
-			hash := sha3.Sum256(val)
+			hash := sha256.Sum256(val)
 
 			g.NewNode(*count, hash[:])
 			*count++
@@ -471,7 +471,7 @@ func (g *Graph) XiGraph(index int64, count *int64) {
 		binary.PutVarint(buf, *count)
 		val := append(g.pk, buf...)
 		val = append(val, ph...)
-		hash := sha3.Sum256(val)
+		hash := sha256.Sum256(val)
 
 		g.NewNode(*count, hash[:])
 		*count++
@@ -487,7 +487,7 @@ func (g *Graph) XiGraph(index int64, count *int64) {
 		binary.PutVarint(buf, nodeId)
 		val := append(g.pk, buf...)
 		val = append(val, parent.H...)
-		hash := sha3.Sum256(val)
+		hash := sha256.Sum256(val)
 
 		g.NewNode(nodeId, hash[:])
 		*count++
@@ -503,7 +503,7 @@ func (g *Graph) XiGraph(index int64, count *int64) {
 		binary.PutVarint(buf, nodeId)
 		val := append(g.pk, buf...)
 		val = append(val, parent.H...)
-		hash := sha3.Sum256(val)
+		hash := sha256.Sum256(val)
 
 		g.NewNode(nodeId, hash[:])
 		*count++
@@ -519,7 +519,7 @@ func (g *Graph) XiGraph(index int64, count *int64) {
 		binary.PutVarint(buf, nodeId)
 		val := append(g.pk, buf...)
 		val = append(val, parent.H...)
-		hash := sha3.Sum256(val)
+		hash := sha256.Sum256(val)
 
 		g.NewNode(nodeId, hash[:])
 		*count++
@@ -541,13 +541,13 @@ func (g *Graph) XiGraph(index int64, count *int64) {
 		binary.PutVarint(buf, nodeId0)
 		val := append(g.pk, buf...)
 		val = append(val, ph...)
-		hash1 := sha3.Sum256(val)
+		hash1 := sha256.Sum256(val)
 
 		ph = append(parent0.H, parent1_1.H...)
 		binary.PutVarint(buf, nodeId1)
 		val = append(g.pk, buf...)
 		val = append(val, ph...)
-		hash2 := sha3.Sum256(val)
+		hash2 := sha256.Sum256(val)
 
 		g.NewNode(nodeId0, hash1[:])
 		g.NewNode(nodeId1, hash2[:])
