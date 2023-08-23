@@ -2,6 +2,7 @@ package PoS
 
 import (
 	"crypto/sha256"
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"log"
@@ -75,6 +76,20 @@ func TestMain(m *testing.M) {
 }
 
 func TestHash(t *testing.T) {
-	sum256 := sha256.Sum256([]byte("hello"))
-	fmt.Println(sum256)
+	hexString := "010c00000000000000000000000000000000000000000000000000000000000000d97280638822588dabfb967892c3ecc06e544d35defe98742aa9ca594b1c4c9af353ad8c21041053c49a5d105431b58a83bba34304be2de5656ffc9cc4d97496"
+
+	// 解码十六进制字符串为字节数组
+	bytes, err := hex.DecodeString(hexString)
+	if err != nil {
+		fmt.Println("Error decoding hex string:", err)
+		return
+	}
+
+	// 计算字节数组的SHA-256哈希值
+	sum256 := sha256.Sum256(bytes)
+
+	// 将哈希值转换为十六进制字符串表示
+	hashHex := hex.EncodeToString(sum256[:])
+
+	fmt.Println("SHA-256 hash:", hashHex)
 }

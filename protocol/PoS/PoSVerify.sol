@@ -1,18 +1,13 @@
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 interface IDataMarketplace {
     function registerStorageProvider(address addr, uint256 availableSpace, uint256 pricePerGBPerMonth) external;
+    function testcall() external;
 }
 
 contract Verifier {
-    bytes public pk;   // public key to verify the proof
-    uint256 public beta; // number of challenges needed
-    bytes32 public root; // root hash
-    IDataMarketplace public market;
-    uint256 public availableSpace;
-    uint256 public pricePerGBPerMonth;
-
     struct Graph {
         bytes pk;
         uint256 index;
@@ -21,53 +16,75 @@ contract Verifier {
         uint256 size;
     }
 
-    Graph public graph;
-    uint256 public index; // index of the graphy in the family
-    uint256 public size;
-    uint256 public pow2;
-    uint256 public log2;
+    struct ProofData {
+        bytes pk;   // public key to verify the proof
+        uint256 index; // index of the graphy in the family
+        uint256 beta; // number of challenges needed
+        bytes32 root; // root hash
+
+        Graph graph;
+        uint256 size;
+        uint256 pow2;
+        uint256 log2;
+
+        uint256 availableSpace;
+        uint256 pricePerGBPerMonth;
+    }
+
+    mapping(address => ProofData) public posData;
+    IDataMarketplace public market;
+    uint256 public a = 0;
+    uint256 public b = 0;
+
 
     event Log_uint256(string message, uint256 value);
     event Log_uint256s(string message, uint256[] value);
     event Log_bytes32(string message, bytes32 value);
     event Log_bytes(string message, bytes value);
     event Log_bytess(string message, bytes[] value);
+    event Log_address(string message, address value);
 
-    constructor(bytes memory _pk, uint256 _index, uint256 _beta, bytes32 _root, uint256 _availableSpace, uint256 _pricePerGBPerMonth) public {
-        availableSpace = _availableSpace;
-        pricePerGBPerMonth = _pricePerGBPerMonth;
+
+    function setProof(bytes memory _pk, uint256 _index, uint256 _beta, bytes32 _root, uint256 _availableSpace, uint256 _pricePerGBPerMonth) public {
+        emit Log_address("add",msg.sender);
+        posData[msg.sender].availableSpace = _availableSpace;
+        posData[msg.sender].pricePerGBPerMonth = _pricePerGBPerMonth;
         // emit Log_uint256("Function started", 0);
-        pk = _pk;
-        beta = _beta;
-        root = _root;
+        posData[msg.sender].pk = _pk;
+        posData[msg.sender].beta = _beta;
+        posData[msg.sender].root = _root;
 
-        size = numXi(_index);
-        log2 = getlog2(size) + 1;
-        pow2 = 2 ** log2;
-        if (2 ** (log2 - 1) == size) {
-            log2--;
-            pow2 = 2 ** log2;
+        posData[msg.sender].size = numXi(_index);
+        posData[msg.sender].log2 = getlog2(posData[msg.sender].size) + 1;
+        posData[msg.sender].pow2 = 2 ** posData[msg.sender].log2;
+        if (2 ** (posData[msg.sender].log2 - 1) == posData[msg.sender].size) {
+            posData[msg.sender].log2--;
+            posData[msg.sender].pow2 = 2 ** posData[msg.sender].log2;
         }
 
         // initialize the graph
         Graph memory newGraph = Graph({
             pk: _pk,
             index: _index,
-            log2: log2,
-            pow2: pow2,
-            size: size
+            log2: posData[msg.sender].log2,
+            pow2: posData[msg.sender].pow2,
+            size: posData[msg.sender].size
         });
 
-        graph = newGraph;
+        posData[msg.sender].graph = newGraph;
 
-        index = _index;
+        posData[msg.sender].index = _index;
     }
 
 
-    function setAddress(address add) external {
-        market = IDataMarketplace(add);
+    function setAddress(address _add) external {
+        emit Log_address("add",msg.sender);
+        market = IDataMarketplace(_add);
     }
 
+    function call() public {
+        market.testcall();
+    }
     function verifySpace(
         uint256[] memory challenges,
         bytes[] memory hashes,
@@ -75,13 +92,14 @@ contract Verifier {
         bytes[][] memory proofs,
         bytes[][][] memory pProofs
     ) public returns(bool) {
+        a += 1;
         for (uint256 i = 0; i < challenges.length; i++) {
             bool flag = true;
             // if(i == 0) emit Log_uint256("print pow2", pow2); //
-            bytes32 buf = putVarint(challenges[i] + pow2);
+            bytes32 buf = putVarint(challenges[i] + posData[msg.sender].pow2);
             // if(i == 0) emit Log_uint256("print challenges[i]", challenges[i]); //
             // if(i == 0) emit Log_bytes32("print buf", buf); //
-            bytes memory val = abi.encodePacked(pk, buf);
+            bytes memory val = abi.encodePacked(posData[msg.sender].pk, buf);
             for (uint256 j = 0; j < parents[i].length; j++) {
                 val = abi.encodePacked(val, parents[i][j]);
             }
@@ -93,13 +111,13 @@ contract Verifier {
             //         return false;
             //     }
             // }
-
+            b += 0;
             if (!verify(challenges[i], hashes[i], proofs[i],flag)) {
                 if(flag) flag = false;
                 return false;
             }
 
-            uint256[] memory ps = getParents(challenges[i], index);
+            uint256[] memory ps = getParents(challenges[i], posData[msg.sender].index);
             // emit Log_uint256s("print ps",ps);
             for (uint256 j = 0; j < ps.length; j++) {
                 if (!verify(ps[j], parents[i][j], pProofs[i][j],flag)) {
@@ -107,7 +125,9 @@ contract Verifier {
                 }
             }
         }
-        market.registerStorageProvider(msg.sender, availableSpace,pricePerGBPerMonth);
+        emit Log_uint256("Function true", 0);
+        a += 1;
+        market.registerStorageProvider(msg.sender, posData[msg.sender].availableSpace,posData[msg.sender].pricePerGBPerMonth);
         return true;
     }
 
@@ -123,7 +143,7 @@ contract Verifier {
         // }
         bytes memory curHash = hash;
         uint256 counter = 0;
-        for (uint256 i = node + pow2; i > 1; i /= 2) {
+        for (uint256 i = node + posData[msg.sender].pow2; i > 1; i /= 2) {
             bytes memory val;
             if (i % 2 == 0) {
                 val = abi.encodePacked(curHash, proof[counter]);
@@ -139,12 +159,12 @@ contract Verifier {
         for (uint256 i = 0; i < 32; i++) {
             // emit Log_bytes32("root",root);
             // emit Log_bytes("curHash",curHash);
-            if (root[i] != curHash[i]) {
+            if (posData[msg.sender].root[i] != curHash[i]) {
                 return false;
             }
         }
         // emit Log_uint256("Yes!!!",1);
-        return root.length == curHash.length;
+        return posData[msg.sender].root.length == curHash.length;
     }
 
 
@@ -279,7 +299,8 @@ contract Verifier {
 
 
     function numXi(uint256 index) private pure returns (uint256) {
-        return (2 ** index) * (index + 1) * index;
+//        return (2 ** index) * (index + 1) * index;
+        return index;
     }
 
     function getlog2(uint256 x) private pure returns (uint256) {
@@ -293,10 +314,10 @@ contract Verifier {
 
 
     function selectChallenges(bytes32 seed) public view returns (uint256[] memory) {
-        uint256[] memory challenges = new uint256[](beta * log2);
+        uint256[] memory challenges = new uint256[](posData[msg.sender].beta * posData[msg.sender].log2);
         for (uint256 i = 0; i < challenges.length; i++) {
             bytes32 hash = keccak256(abi.encodePacked(seed, i));
-            challenges[i] = uint256(hash) % size;  // Assuming `size` is the range of the random index
+            challenges[i] = uint256(hash) % posData[msg.sender].size;  // Assuming `size` is the range of the random index
         }
         return challenges;
     }
@@ -327,4 +348,3 @@ contract Verifier {
     }
 
 }
-

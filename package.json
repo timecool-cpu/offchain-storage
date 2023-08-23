@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/timecool-cpu/offchain-storage/issues"
   },
-  "homepage": "https://github.com/timecool-cpu/offchain-storage#readme"
+  "homepage": "https://github.com/timecool-cpu/offchain-storage#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.2"
+  }
 }

@@ -5,7 +5,7 @@ solc --bin --abi --optimize -o ./build PoDVerify.sol
 
 部署智能合约
 ````bash
-python PoD_deploy.py
+python PoS_deploy.py
 ````
 
 打通智能合约
