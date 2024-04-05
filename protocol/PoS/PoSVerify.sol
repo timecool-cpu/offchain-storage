@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -45,8 +44,9 @@ contract Verifier {
     event Log_address(string message, address value);
 
 
-    function setProof(bytes memory _pk, uint256 _index, uint256 _beta, bytes32 _root, uint256 _availableSpace, uint256 _pricePerGBPerMonth) public {
+    function setProof(bytes memory _pk, uint256 _index, uint256 _beta, bytes32 _root, uint256 _pricePerGBPerMonth) public {
         emit Log_address("add",msg.sender);
+        uint256 _availableSpace = numXi(_index);
         posData[msg.sender].availableSpace = _availableSpace;
         posData[msg.sender].pricePerGBPerMonth = _pricePerGBPerMonth;
         // emit Log_uint256("Function started", 0);
@@ -82,9 +82,6 @@ contract Verifier {
         market = IDataMarketplace(_add);
     }
 
-    function call() public {
-        market.testcall();
-    }
     function verifySpace(
         uint256[] memory challenges,
         bytes[] memory hashes,
@@ -127,7 +124,7 @@ contract Verifier {
         }
         emit Log_uint256("Function true", 0);
         a += 1;
-        market.registerStorageProvider(msg.sender, posData[msg.sender].availableSpace,posData[msg.sender].pricePerGBPerMonth);
+        // market.registerStorageProvider(msg.sender, posData[msg.sender].availableSpace,posData[msg.sender].pricePerGBPerMonth);
         return true;
     }
 
@@ -201,7 +198,7 @@ contract Verifier {
     }
 
     // Separate the computeConstants function into multiple helper functions
-    function computeBasic(uint256 index) public view returns(uint256, uint256, uint256) {
+    function computeBasic(uint256 index) internal view returns(uint256, uint256, uint256) {
         uint256 pow2index = 2 ** index;
         uint256 pow2index_1 = 2 ** (index-1);
         uint256 sources = pow2index;
@@ -209,14 +206,14 @@ contract Verifier {
         return (pow2index, pow2index_1, sources);
     }
 
-    function computeButterfly(uint256 index, uint256 sources) public view returns(uint256, uint256) {
+    function computeButterfly(uint256 index, uint256 sources) internal view returns(uint256, uint256) {
         uint256 firstButter = sources + numButterfly(index-1);
         uint256 firstXi = firstButter + numXi(index-1);
 
         return (firstButter, firstXi);
     }
 
-    function computeSink(uint256 index, uint256 firstXi) public view returns(uint256, uint256, uint256) {
+    function computeSink(uint256 index, uint256 firstXi) internal view returns(uint256, uint256, uint256) {
         uint256 secondXi = firstXi + numXi(index-1);
         uint256 secondButter = secondXi + numButterfly(index-1);
         uint256 sinks = secondButter + 2 ** index;
@@ -225,7 +222,7 @@ contract Verifier {
     }
 
     // Assuming that numButterfly and numXi are other functions in the contract
-    function getGraph(uint256 node, uint256 index) public view returns(uint256, uint256) {
+    function getGraph(uint256 node, uint256 index) internal view returns(uint256, uint256) {
         if (index == 1) {
             if (node < 2) {
                 return (2, 0);
@@ -277,7 +274,7 @@ contract Verifier {
     }
 
 
-    function butterflyParents(uint256 begin, uint256 node, uint256 index) public pure returns(uint256, uint256) {
+    function butterflyParents(uint256 begin, uint256 node, uint256 index) internal pure returns(uint256, uint256) {
         uint256 pow2index_1 = 2 ** (index - 1);
         uint256 level = (node - begin) / pow2index_1;
         uint256 prev;
@@ -299,8 +296,7 @@ contract Verifier {
 
 
     function numXi(uint256 index) private pure returns (uint256) {
-//        return (2 ** index) * (index + 1) * index;
-        return index;
+        return (2 ** index) * (index + 1) * index;
     }
 
     function getlog2(uint256 x) private pure returns (uint256) {
@@ -322,7 +318,7 @@ contract Verifier {
         return challenges;
     }
 
-    function putVarint(uint256 x) public pure returns (bytes32) {
+    function putVarint(uint256 x) internal pure returns (bytes32) {
         uint256 ux = uint256(x) << 1;
         if (x < 0) {
             ux = ~ux;
@@ -330,7 +326,7 @@ contract Verifier {
         return putUvarint(ux);
     }
 
-    function putUvarint(uint256 x) public pure returns (bytes32) {
+    function putUvarint(uint256 x) internal pure returns (bytes32) {
         bytes memory buf = new bytes(32);
         uint256 i = 0;
         while (x >= 0x80) {

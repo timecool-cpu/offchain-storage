@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/timecool-cpu/offchain-storage#readme",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.2"
+    "@openzeppelin/contracts": "^4.9.2",
+    "ipfs-http-client": "^60.0.1"
   }
 }

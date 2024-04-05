@@ -6,7 +6,7 @@ import (
 )
 
 func TestFileInfo(T *testing.T) {
-	path := "/Users/panzhuochen/repository/offChainStorage/test.txt"
+	path := "/Users/panzhuochen/offchain-storage/test.txt"
 	fmt.Println(getFileCID(path))
 	info, err := GetFileInfo(path)
 	if err != nil {

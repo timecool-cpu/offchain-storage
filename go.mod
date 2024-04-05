@@ -20,7 +20,9 @@ require (
 require (
 	github.com/ethereum/go-ethereum v1.12.0
 	github.com/libp2p/go-libp2p-core v0.20.1
+	github.com/showwin/speedtest-go v1.6.10
 )
+
 // brew
 require (
 	bazil.org/fuse v0.0.0-20200117225306-7b5117fecadc // indirect
