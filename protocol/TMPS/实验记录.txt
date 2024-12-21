@@ -1,0 +1,201 @@
+Setup cost 1h3m26.646885s
+true
+1  Chal cost 4.5152ms
+1  Prove cost 5m42.1271507s
+1  Verify cost 11.0165ms
+true
+2  Chal cost 4.1126ms
+2  Prove cost 5m39.4424433s
+2  Verify cost 10.7194ms
+true
+3  Chal cost 4.0515ms
+3  Prove cost 5m39.8486314s
+3  Verify cost 9.5113ms
+true
+4  Chal cost 4.0035ms
+4  Prove cost 5m40.3988843s
+4  Verify cost 10.5067ms
+true
+5  Chal cost 4.1372ms
+5  Prove cost 5m39.9880014s
+5  Verify cost 10.5182ms
+true
+6  Chal cost 3.5768ms
+6  Prove cost 5m40.0887548s
+6  Verify cost 10.8809ms
+true
+7  Chal cost 3.539ms
+7  Prove cost 5m39.4066136s
+7  Verify cost 11.0078ms
+true
+8  Chal cost 3.9607ms
+8  Prove cost 5m38.6922452s
+8  Verify cost 11.0081ms
+true
+9  Chal cost 4.013ms
+9  Prove cost 5m39.4711394s
+9  Verify cost 10.5069ms
+true
+10  Chal cost 4.0008ms
+10  Prove cost 5m38.1866255s
+10  Verify cost 11.5412ms
+true
+11  Chal cost 3.5271ms
+11  Prove cost 5m39.6424652s
+11  Verify cost 10.9779ms
+true
+12  Chal cost 4.0139ms
+12  Prove cost 5m39.1329806s
+12  Verify cost 11.3622ms
+true
+13  Chal cost 3.759ms
+13  Prove cost 5m38.5988836s
+13  Verify cost 10.5249ms
+true
+14  Chal cost 4.0932ms
+14  Prove cost 5m39.1224474s
+14  Verify cost 10.7589ms
+true
+15  Chal cost 4.0132ms
+15  Prove cost 5m38.7840575s
+15  Verify cost 10.5067ms
+true
+16  Chal cost 4.5051ms
+16  Prove cost 5m38.7958265s
+16  Verify cost 11.0737ms
+true
+17  Chal cost 4.0141ms
+17  Prove cost 5m38.5793839s
+17  Verify cost 10.4588ms
+true
+18  Chal cost 2.5265ms
+18  Prove cost 5m40.7520976s
+18  Verify cost 10.4898ms
+true
+19  Chal cost 4.0531ms
+19  Prove cost 5m38.3599612s
+19  Verify cost 10.5199ms
+true
+20  Chal cost 3.5049ms
+20  Prove cost 5m39.1614297s
+20  Verify cost 10.4839ms
+true
+21  Chal cost 2.5267ms
+21  Prove cost 5m40.0368164s
+21  Verify cost 9.9235ms
+true
+22  Chal cost 4.0007ms
+22  Prove cost 5m39.7051395s
+22  Verify cost 10.4154ms
+true
+23  Chal cost 4.232ms
+23  Prove cost 5m39.9760514s
+23  Verify cost 10.9917ms
+true
+24  Chal cost 4.0142ms
+24  Prove cost 5m38.876466s
+24  Verify cost 11.0554ms
+true
+25  Chal cost 4.0142ms
+25  Prove cost 5m39.4943281s
+25  Verify cost 9.7014ms
+true
+26  Chal cost 4.011ms
+26  Prove cost 5m40.0403042s
+26  Verify cost 10.4364ms
+true
+27  Chal cost 4.5035ms
+27  Prove cost 5m39.6385482s
+27  Verify cost 10.5486ms
+true
+28  Chal cost 4.0142ms
+28  Prove cost 5m37.5819971s
+28  Verify cost 10.1219ms
+true
+29  Chal cost 4.5274ms
+29  Prove cost 5m38.5547859s
+29  Verify cost 10.3247ms
+true
+30  Chal cost 3.588ms
+30  Prove cost 5m40.354448s
+30  Verify cost 10.9924ms
+true
+31  Chal cost 3.5506ms
+31  Prove cost 5m38.645501s
+31  Verify cost 10.5226ms
+true
+32  Chal cost 3.5272ms
+32  Prove cost 2h45m30.0800112s
+32  Verify cost 9.5282ms
+true
+33  Chal cost 4.0001ms
+33  Prove cost 5m31.5429859s
+33  Verify cost 10.3135ms
+true
+34  Chal cost 3.5273ms
+34  Prove cost 5m34.7252696s
+34  Verify cost 10.3655ms
+true
+35  Chal cost 3.2779ms
+35  Prove cost 5m34.301689s
+35  Verify cost 9.5787ms
+true
+36  Chal cost 4.0093ms
+36  Prove cost 5m35.4818457s
+36  Verify cost 10.5387ms
+true
+37  Chal cost 4.0012ms
+37  Prove cost 5m35.5996957s
+37  Verify cost 9.4674ms
+true
+38  Chal cost 4.0642ms
+38  Prove cost 5m35.6723033s
+38  Verify cost 11.0572ms
+true
+39  Chal cost 4.0517ms
+39  Prove cost 5m35.4614151s
+39  Verify cost 10.0105ms
+true
+40  Chal cost 4.0007ms
+40  Prove cost 5m35.6121801s
+40  Verify cost 11.0445ms
+true
+41  Chal cost 3.5272ms
+41  Prove cost 5m34.4817289s
+41  Verify cost 10.4529ms
+true
+42  Chal cost 4.1034ms
+42  Prove cost 5m38.4953044s
+42  Verify cost 10.1004ms
+true
+43  Chal cost 3.9973ms
+43  Prove cost 5m39.2829988s
+43  Verify cost 11.0253ms
+true
+44  Chal cost 3.5774ms
+44  Prove cost 5m37.2142442s
+44  Verify cost 10.0363ms
+true
+45  Chal cost 4.0006ms
+45  Prove cost 5m37.372686s
+45  Verify cost 10.5065ms
+true
+46  Chal cost 4.0358ms
+46  Prove cost 5m38.008208s
+46  Verify cost 10.6365ms
+true
+47  Chal cost 4.0132ms
+47  Prove cost 5m35.8345931s
+47  Verify cost 10.5291ms
+true
+48  Chal cost 4.0014ms
+48  Prove cost 5m36.8335869s
+48  Verify cost 10.0645ms
+true
+49  Chal cost 3.9803ms
+49  Prove cost 5m37.80696s
+49  Verify cost 10.039ms
+true
+50  Chal cost 4.0009ms
+50  Prove cost 5m36.7553245s
+50  Verify cost 9.4305ms

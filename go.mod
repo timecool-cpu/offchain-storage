@@ -21,6 +21,7 @@ require (
 	github.com/ethereum/go-ethereum v1.12.0
 	github.com/libp2p/go-libp2p-core v0.20.1
 	github.com/showwin/speedtest-go v1.6.10
+	github.com/sirupsen/logrus v1.8.1
 )
 
 // brew

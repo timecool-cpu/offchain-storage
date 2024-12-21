@@ -36,6 +36,7 @@ func evalTrap(x []byte, n *big.Int, e *big.Int) []byte {
 	r := new(big.Int).Exp(xInt, e, n)
 	return r.Bytes()
 }
+
 func eval(x []byte, n *big.Int, t uint) []byte {
 	g := new(big.Int).SetBytes(x)
 	exp := new(big.Int).SetUint64(1 << t)
@@ -44,7 +45,7 @@ func eval(x []byte, n *big.Int, t uint) []byte {
 }
 
 // 使用陷门排列store生成并存储数据的身份验证信息
-func Store(c []byte, d []byte, p *big.Int, q *big.Int, t int, k int) ([]byte, []byte) {
+func store(c []byte, d []byte, p *big.Int, q *big.Int, t int, k int) ([]byte, []byte) {
 	one := big.NewInt(1)
 	n := new(big.Int).Mul(p, q)
 	phi := new(big.Int).Mul(new(big.Int).Sub(p, one), new(big.Int).Sub(q, one))
