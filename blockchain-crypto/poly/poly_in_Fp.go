@@ -2,9 +2,7 @@ package tmps
 
 import (
 	"fmt"
-	"io"
 	"math/big"
-	"os"
 )
 
 // Polynomial 结构表示多项式，包括系数和有限域 GF(p) 中的素数 p。
@@ -228,78 +226,4 @@ func (M *Polynomial) Divide(P *Polynomial) (*Polynomial, *Polynomial) {
 	quotient := NewPolynomial(quotientCoefficients, M.prime)
 	return quotient, remainder
 
-}
-
-// FileToPolynomial 将文件内容编码为多项式。
-func (p *Polynomial) FileToPolynomial(filePath string) (*Polynomial, error) {
-	file, err := os.Open(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("无法打开文件：%w", err)
-	}
-	defer file.Close()
-
-	fileSize, err := file.Seek(0, io.SeekEnd)
-	if err != nil {
-		return nil, fmt.Errorf("无法获取文件大小：%w", err)
-	}
-	_, err = file.Seek(0, io.SeekStart) // 重置文件指针
-	if err != nil {
-		return nil, fmt.Errorf("无法重置文件指针：%w", err)
-	}
-
-	chunkSize := 31 // 每个系数最多 31 字节 (根据你的质数大小调整)
-	numChunks := (fileSize + int64(chunkSize) - 1) / int64(chunkSize)
-
-	coefficients := make([]*big.Int, numChunks)
-	for i := range coefficients {
-		coefficients[i] = big.NewInt(0)
-	}
-
-	buffer := make([]byte, chunkSize)
-	for i := int64(0); i < numChunks; i++ {
-		n, err := file.Read(buffer)
-		if err != nil && err != io.EOF {
-			return nil, fmt.Errorf("读取文件失败：%w", err)
-		}
-		if n > 0 {
-			// 将字节转换为大整数
-			coeff := big.NewInt(0).SetBytes(buffer[:n])
-			coefficients[i].Set(coeff)
-			// 确保系数在有限域内
-			coefficients[i].Mod(coefficients[i], p.prime)
-
-		}
-		// 清空缓冲区
-		for j := range buffer {
-			buffer[j] = 0
-		}
-	}
-
-	return NewPolynomial(coefficients, p.prime), nil
-}
-
-func (p *Polynomial) PolynomialToFile(filePath string) error {
-	file, err := os.Create(filePath)
-	if err != nil {
-		return fmt.Errorf("无法创建文件：%w", err)
-	}
-	defer file.Close()
-
-	chunkSize := 31 // 与 FileToPolynomial 中的 chunkSize 保持一致
-
-	for _, coeff := range p.coefficients {
-		bytes := coeff.Bytes()
-
-		// 如果字节长度小于chunkSize，则需要进行填充
-		if len(bytes) < chunkSize {
-			padding := make([]byte, chunkSize-len(bytes))
-			bytes = append(bytes, padding...)
-		}
-
-		_, err = file.Write(bytes)
-		if err != nil {
-			return fmt.Errorf("写入文件失败：%w", err)
-		}
-	}
-	return nil
 }

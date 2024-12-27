@@ -18,7 +18,7 @@ func main() {
 	// 文件数
 	N := 2
 	// 多项式次数数组
-	degrees := []int{10000, 300, 10, 20, 30, 40}
+	degrees := []int{100, 300, 10, 20, 30, 40}
 
 	for _, d := range degrees {
 		logrus.Infof("Starting setup for polynomial degree: %d", d)
