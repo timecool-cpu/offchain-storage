@@ -19,7 +19,7 @@ func Prove(c *big.Int, ek *Ek) *Pi {
 		mul.Mul(mul, c)
 	}
 
-	// 重置mul为1，并计算 pi1 和 pi2
+	// 重置mul为1，并计算 Pi1 和 Pi2
 	mul.SetInt64(1)
 	for i := len(ek.q1_i) - 1; i >= 0; i-- {
 		tmp := new(bn256.G2).ScalarMult(ek.q1_i[i], mul)
@@ -27,7 +27,7 @@ func Prove(c *big.Int, ek *Ek) *Pi {
 		mul.Mul(mul, c)
 	}
 
-	// 重置mul为1，并计算 pi2
+	// 重置mul为1，并计算 Pi2
 	mul.SetInt64(1)
 	for i := len(ek.q2_i) - 1; i >= 0; i-- {
 		tmp := new(bn256.G2).ScalarMult(ek.q2_i[i], mul)
@@ -36,14 +36,14 @@ func Prove(c *big.Int, ek *Ek) *Pi {
 	}
 
 	// 打印调试信息
-	PrintG2(pi1, "pi1")
-	PrintG2(pi2, "pi2")
+	PrintG2(pi1, "Pi1")
+	PrintG2(pi2, "Pi2")
 
 	// 构造并返回 Pi 结构
 	pi := &Pi{
-		y:   y,
-		pi1: pi1,
-		pi2: pi2,
+		Y:   (*BigIntAlias)(y),
+		Pi1: (*G2Alias)(pi1),
+		Pi2: (*G2Alias)(pi2),
 	}
 
 	return pi

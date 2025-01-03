@@ -8,11 +8,11 @@ import (
 
 // SetupCommon 用于生成公共部分
 func SetupCommon(d int, N int) *CommonParams {
-	// 随机生成 b1, b2
+	// 随机生成 B1, B2
 	b1, _ := rand.Int(rand.Reader, Prime)
 	b2, _ := rand.Int(rand.Reader, Prime)
 
-	// 生成 g_1, g_2, G_T
+	// 生成 G_1, G_2, G_T
 	g_1 := OneG1()
 	g_2 := OneG2()
 	G_T := bn256.Pair(g_1, g_2)
@@ -42,7 +42,7 @@ func Setup(bf_M *Polynomial, com *CommonParams) (*Pk, *Ek) {
 	Z_x := new(Polynomial)
 	Z_x = bf_M.Subtract(W_x)
 
-	//构造多项式X^2 + b0,X^2 + b1
+	//构造多项式X^2 + b0,X^2 + B1
 	B1 := NewPolynomial([]*big.Int{big.NewInt(1), big.NewInt(0), com.b1}, Prime)
 	B2 := NewPolynomial([]*big.Int{big.NewInt(1), big.NewInt(0), com.b2}, Prime)
 
@@ -98,15 +98,15 @@ func Setup(bf_M *Polynomial, com *CommonParams) (*Pk, *Ek) {
 	}
 
 	pk := Pk{
-		com.g_1,
-		com.g_2,
-		com.G_T,
-		com.b_1,
-		com.b_2,
+		(*G1Alias)(com.g_1),
+		(*G2Alias)(com.g_2),
+		(*GTAlias)(com.G_T),
+		(*G1Alias)(com.b_1),
+		(*G1Alias)(com.b_2),
 		com.N,
 		com.d,
-		r_0,
-		r_1,
+		(*G2Alias)(r_0),
+		(*G2Alias)(r_1),
 	}
 
 	ek := Ek{

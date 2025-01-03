@@ -11,12 +11,12 @@ func isEqual(gt1 *bn256.GT, gt2 *bn256.GT) bool {
 }
 
 func Verify(pk *Pk, c *big.Int, pi *Pi, vk *Vk) bool {
-	left := bn256.Pair(pk.g_1, new(bn256.G2).ScalarMult(pk.g_2, pi.y))
+	left := bn256.Pair((*bn256.G1)(pk.G_1), new(bn256.G2).ScalarMult((*bn256.G2)(pk.G_2), (*big.Int)(pi.Y)))
 	PrintGT(left, "left")
 
-	right1 := bn256.Pair(new(bn256.G1).Add(pk.b1, new(bn256.G1).ScalarMult(pk.g_1, new(big.Int).Mul(c, c))), pi.pi1)
-	right2 := bn256.Pair(new(bn256.G1).Add(pk.b2, new(bn256.G1).ScalarMult(pk.g_1, new(big.Int).Mul(c, c))), pi.pi2)
-	right3 := bn256.Pair(pk.g_1, vk.vk)
+	right1 := bn256.Pair(new(bn256.G1).Add((*bn256.G1)(pk.B1), new(bn256.G1).ScalarMult((*bn256.G1)(pk.G_1), new(big.Int).Mul(c, c))), (*bn256.G2)(pi.Pi1))
+	right2 := bn256.Pair(new(bn256.G1).Add((*bn256.G1)(pk.B2), new(bn256.G1).ScalarMult((*bn256.G1)(pk.G_1), new(big.Int).Mul(c, c))), (*bn256.G2)(pi.Pi2))
+	right3 := bn256.Pair((*bn256.G1)(pk.G_1), (*bn256.G2)(vk.Vk))
 	PrintGT(right1, "right1")
 	PrintGT(right2, "right2")
 	PrintGT(right3, "right3")

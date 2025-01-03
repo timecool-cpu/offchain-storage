@@ -87,7 +87,7 @@ func TestProofVerify(t *testing.T) {
 
 	// Chal 阶段
 	startChal := time.Now()
-	chal := GenerateChallenges("challenge", N)
+	chal := GenerateChallenges("Challenge", N)
 	challenge1, vk1 := Chal(pk1, chal)
 	challenge2, vk2 := Chal(pk2, chal)
 	logrus.WithFields(logrus.Fields{

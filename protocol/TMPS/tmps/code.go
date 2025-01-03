@@ -8,10 +8,10 @@ import (
 )
 
 type InputData struct {
-	pk *Pk      `json:"pk"`
-	c  *big.Int `json:"c"`
-	pi *Pi      `json:"pi"`
-	vk *Vk      `json:"vk"`
+	Pk *Pk      `json:"pk"`
+	C  *big.Int `json:"c"`
+	Pi *Pi      `json:"pi"`
+	Vk *Vk      `json:"Vk"`
 }
 
 // 定义 bn256.G1 的类型别名
@@ -118,13 +118,44 @@ func (g *GTAlias) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// BigIntAlias 为 big.Int 提供 JSON 支持
+type BigIntAlias big.Int
+
+// 实现 JSON 序列化接口
+func (b *BigIntAlias) MarshalJSON() ([]byte, error) {
+	if b == nil {
+		return []byte("null"), nil
+	}
+	return json.Marshal((*big.Int)(b).String())
+}
+
+// 实现 JSON 反序列化接口
+func (b *BigIntAlias) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		return nil
+	}
+
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+
+	i := new(big.Int)
+	if _, ok := i.SetString(s, 10); !ok {
+		return fmt.Errorf("invalid big.Int format: %s", s)
+	}
+
+	*b = BigIntAlias(*i)
+	return nil
+}
+
 // encode 将函数 Verify 的入参打包为字节数组
 func encode(pk *Pk, c *big.Int, pi *Pi, vk *Vk) ([]byte, error) {
 	inputData := InputData{
-		pk: pk,
-		c:  c,
-		pi: pi,
-		vk: vk,
+		Pk: pk,
+		C:  c,
+		Pi: pi,
+		Vk: vk,
 	}
 
 	jsonData, err := json.Marshal(inputData)
@@ -142,5 +173,5 @@ func decode(input []byte) (*Pk, *big.Int, *Pi, *Vk, error) {
 		return nil, nil, nil, nil, fmt.Errorf("json unmarshal error: %w", err)
 	}
 
-	return inputData.pk, inputData.c, inputData.pi, inputData.vk, nil
+	return inputData.Pk, inputData.C, inputData.Pi, inputData.Vk, nil
 }

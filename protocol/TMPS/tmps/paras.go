@@ -7,20 +7,20 @@ import (
 )
 
 type CommonParams struct {
-	g_1 *bn256.G1 `json:"g_1"`
-	g_2 *bn256.G2 `json:"g_2"`
+	g_1 *bn256.G1 `json:"G_1"`
+	g_2 *bn256.G2 `json:"G_2"`
 	G_T *bn256.GT `json:"g_t"`
 	b_1 *bn256.G1 `json:"b_1"`
 	b_2 *bn256.G1 `json:"b_2"`
-	b1  *big.Int  `json:"b1"`
-	b2  *big.Int  `json:"b2"`
+	b1  *big.Int  `json:"B1"`
+	b2  *big.Int  `json:"B2"`
 	N   int       `json:"n"`
 	d   int       `json:"d"`
 }
 
 type Sk struct {
-	g_1     *bn256.G1   `json:"g_1"`
-	g_2     *bn256.G2   `json:"g_2"`
+	g_1     *bn256.G1   `json:"G_1"`
+	g_2     *bn256.G2   `json:"G_2"`
 	xi      *big.Int    `json:"xi"`
 	g_n1    []*bn256.G1 `json:"g_n1"`
 	g_n2    []*bn256.G2 `json:"g_n2"`
@@ -31,25 +31,25 @@ type Sk struct {
 }
 
 type Pk struct {
-	g_1 *bn256.G1 `json:"g_1"`
-	g_2 *bn256.G2 `json:"g_2"`
-	G_T *bn256.GT `json:"g_t"`
-	b1  *bn256.G1 `json:"b1"`
-	b2  *bn256.G1 `json:"b2"`
-	N   int       `json:"n"`
-	d   int       `json:"d"`
-	r_0 *bn256.G2 `json:"r_0"`
-	r_1 *bn256.G2 `json:"r_1"`
+	G_1 *G1Alias `json:"G_1"`
+	G_2 *G2Alias `json:"G_2"`
+	G_T *GTAlias `json:"g_t"`
+	B1  *G1Alias `json:"B1"`
+	B2  *G1Alias `json:"B2"`
+	N   int      `json:"n"`
+	D   int      `json:"d"`
+	R_0 *G2Alias `json:"R_0"`
+	R_1 *G2Alias `json:"R_1"`
 }
 
-// GetG1 返回 g_1 的值
+// GetG1 返回 G_1 的值
 func (pk *Pk) GetG1() *bn256.G1 {
-	return pk.g_1
+	return (*bn256.G1)(pk.G_1)
 }
 
-// GetG2 返回 g_2 的值
+// GetG2 返回 G_2 的值
 func (pk *Pk) GetG2() *bn256.G2 {
-	return pk.g_2
+	return (*bn256.G2)(pk.G_2)
 }
 
 type Ek struct {
@@ -59,14 +59,14 @@ type Ek struct {
 }
 
 type Vk struct {
-	challenge *big.Int  `json:"challenge"`
-	vk        *bn256.G2 `json:"vk"`
+	Challenge *BigIntAlias `json:"Challenge"`
+	Vk        *G2Alias     `json:"Vk"`
 }
 
 type Pi struct {
-	y   *big.Int  `json:"y"`
-	pi1 *bn256.G2 `json:"pi1"`
-	pi2 *bn256.G2 `json:"pi2"`
+	Y   *BigIntAlias `json:"Y"`
+	Pi1 *G2Alias     `json:"Pi1"`
+	Pi2 *G2Alias     `json:"Pi2"`
 }
 
 var bf_A []*Polynomial

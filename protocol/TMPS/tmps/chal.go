@@ -2,6 +2,7 @@ package tmps
 
 import (
 	"crypto/rand"
+	bn256 "github.com/ethereum/go-ethereum/crypto/bn256/cloudflare"
 	"math/big"
 )
 
@@ -31,12 +32,12 @@ func generateRandomSubset(N int, l int) ([]int, error) {
 }
 
 func Chal(pk *Pk, chal []*big.Int) (*big.Int, *Vk) {
-	tmp := OneG2().ScalarMult(pk.r_1, chal[0])
-	vk_n := OneG2().Add(tmp, pk.r_0)
+	tmp := OneG2().ScalarMult((*bn256.G2)(pk.R_1), chal[0])
+	vk_n := OneG2().Add(tmp, (*bn256.G2)(pk.R_0))
 
 	vk := Vk{
-		chal[0],
-		vk_n,
+		(*BigIntAlias)(chal[0]),
+		(*G2Alias)(vk_n),
 	}
 
 	return chal[0], &vk

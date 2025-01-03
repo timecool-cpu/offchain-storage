@@ -14,19 +14,19 @@ func Aggregation(pis []*Pi, vks []*Vk) (*Pi, *Vk) {
 	vk_a := new(bn256.G2)
 
 	for i := 0; i < len(pis); i++ {
-		y.Add(y, new(big.Int).Mul(r[i], pis[i].y))
-		pi1.Add(pi1, new(bn256.G2).ScalarMult(pis[i].pi1, r[i]))
-		pi2.Add(pi2, new(bn256.G2).ScalarMult(pis[i].pi2, r[i]))
-		vk_a.Add(vk_a, new(bn256.G2).ScalarMult(vks[i].vk, r[i]))
+		y.Add(y, new(big.Int).Mul(r[i], (*big.Int)(pis[i].Y)))
+		pi1.Add(pi1, new(bn256.G2).ScalarMult((*bn256.G2)(pis[i].Pi1), r[i]))
+		pi2.Add(pi2, new(bn256.G2).ScalarMult((*bn256.G2)(pis[i].Pi2), r[i]))
+		vk_a.Add(vk_a, new(bn256.G2).ScalarMult((*bn256.G2)(vks[i].Vk), r[i]))
 	}
 	pi := Pi{
-		y:   y,
-		pi1: pi1,
-		pi2: pi2,
+		Y:   (*BigIntAlias)(y),
+		Pi1: (*G2Alias)(pi1),
+		Pi2: (*G2Alias)(pi2),
 	}
 
-	vk1 := Vk{challenge: vks[0].challenge,
-		vk: vk_a,
+	vk1 := Vk{Challenge: vks[0].Challenge,
+		Vk: (*G2Alias)(vk_a),
 	}
 	return &pi, &vk1
 }
