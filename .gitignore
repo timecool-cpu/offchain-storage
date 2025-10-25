@@ -1,2 +1,14 @@
-node_modules
-testdata
+# Node
+node_modules/
+# Build outputs
+bin/
+dist/
+# OS / editor
+.DS_Store
+.idea/
+# Logs
+*.log
+# Env
+.env
+# Coverage
+coverage/

@@ -108,3 +108,8 @@ func numButterfly(index int64) int64 {
 func numXi(index int64) int64 {
 	return (1 << uint64(index)) * (index + 1) * index
 }
+
+func main() {
+	// basic entrypoint to make this a valid binary
+	_ = Graph{}
+}
